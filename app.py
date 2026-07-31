@@ -149,25 +149,25 @@ with header_col1:
 
 with header_col2:
     st.markdown(
-        "<div class="status-pill">🟢 System Ready</div>",
+        '<div class="status-pill">🟢 System Ready</div>',
         unsafe_allow_html=True
     )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ---------------- HERO CARD ----------------
-st.markdown("<div class="main-card">", unsafe_allow_html=True)
+st.markdown('<div class="main-card">', unsafe_allow_html=True)
 
-st.markdown("<div style='font-size:4rem;'>🛡️</div>", unsafe_allow_html=True)
-st.markdown("<div class="big-heading">Need Help?</div>", unsafe_allow_html=True)
+st.markdown('<div style="font-size:4rem;">🛡️</div>', unsafe_allow_html=True)
+st.markdown('<div class="big-heading">Need Help?</div>', unsafe_allow_html=True)
 st.markdown(
-    "<div class="muted">Press the button below to send an emergency alert to your trusted contacts.</div>",
+    '<div class="muted">Press the button below to send an emergency alert to your trusted contacts.</div>',
     unsafe_allow_html=True
 )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-st.markdown("<div class="sos-button">", unsafe_allow_html=True)
+st.markdown('<div class="sos-button">', unsafe_allow_html=True)
 if st.button("🚨 SEND EMERGENCY ALERT", key="sos"):
     now = datetime.now().strftime("%d %b %Y • %I:%M %p")
     st.error("🚨 Emergency Alert Sent Successfully!")
@@ -183,33 +183,33 @@ st.markdown("<br>", unsafe_allow_html=True)
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("<div class="feature-card">", unsafe_allow_html=True)
-    st.markdown("<div style='font-size:3rem;'>📍</div>", unsafe_allow_html=True)
+    st.markdown('<div class="feature-card">', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:3rem;">📍</div>', unsafe_allow_html=True)
     st.markdown("### Share My Location")
     st.write("Share your current location with your trusted contacts instantly.")
-    st.markdown("<div class="blue-button">", unsafe_allow_html=True)
+    st.markdown('<div class="blue-button">', unsafe_allow_html=True)
     if st.button("📍 SHARE LOCATION", key="loc"):
         st.success("Location shared successfully!")
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
-    st.markdown("<div class="feature-card">", unsafe_allow_html=True)
-    st.markdown("<div style='font-size:3rem;'>✅</div>", unsafe_allow_html=True)
+    st.markdown('<div class="feature-card">', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:3rem;">✅</div>', unsafe_allow_html=True)
     st.markdown("### I Am Safe")
     st.write("Inform your contacts that you are safe now and no help is needed.")
-    st.markdown("<div class="green-button">", unsafe_allow_html=True)
+    st.markdown('<div class="green-button">', unsafe_allow_html=True)
     if st.button("✅ I AM SAFE", key="safe"):
         st.success("Status updated: You are safe.")
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col3:
-    st.markdown("<div class="feature-card">", unsafe_allow_html=True)
-    st.markdown("<div style='font-size:3rem;'>👥</div>", unsafe_allow_html=True)
+    st.markdown('<div class="feature-card">', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:3rem;">👥</div>', unsafe_allow_html=True)
     st.markdown("### My Contacts")
     st.write("View and manage your trusted emergency contacts easily.")
-    st.markdown("<div class="purple-button">", unsafe_allow_html=True)
+    st.markdown('<div class="purple-button">', unsafe_allow_html=True)
     if st.button("👥 VIEW CONTACTS", key="contacts"):
         st.info("Trusted Contacts:\\n• Mom\\n• Dad\\n• Sister\\n• Best Friend")
     st.markdown("</div>", unsafe_allow_html=True)
@@ -223,22 +223,35 @@ st.markdown("## How SilentSOS AI Works")
 s1, s2, s3, s4 = st.columns(4)
 
 with s1:
-    st.markdown("<div class="step-card"><div style='font-size:2rem;'>👆</div><h4>1. Press Alert</h4><p>Tap the emergency button when in danger.</p></div>", unsafe_allow_html=True)
+    st.markdown(
+        '<div class="step-card"><div style="font-size:2rem;">👆</div><h4>1. Press Alert</h4><p>Tap the emergency button when in danger.</p></div>',
+        unsafe_allow_html=True
+    )
 
 with s2:
-    st.markdown("<div class="step-card"><div style='font-size:2rem;'>🔔</div><h4>2. Send Alert</h4><p>Alert (SMS + Call) is sent to your contacts.</p></div>", unsafe_allow_html=True)
+    st.markdown(
+        '<div class="step-card"><div style="font-size:2rem;">🔔</div><h4>2. Send Alert</h4><p>Alert (SMS + Call) is sent to your contacts.</p></div>',
+        unsafe_allow_html=True
+    )
 
 with s3:
-    st.markdown("<div class="step-card"><div style='font-size:2rem;'>📍</div><h4>3. Share Location</h4><p>Your live location is shared instantly.</p></div>", unsafe_allow_html=True)
+    st.markdown(
+        '<div class="step-card"><div style="font-size:2rem;">📍</div><h4>3. Share Location</h4><p>Your live location is shared instantly.</p></div>',
+        unsafe_allow_html=True
+    )
 
 with s4:
-    st.markdown("<div class="step-card"><div style='font-size:2rem;'>🛡️</div><h4>4. Get Help</h4><p>Your contacts can reach you quickly.</p></div>", unsafe_allow_html=True)
+    st.markdown(
+        '<div class="step-card"><div style="font-size:2rem;">🛡️</div><h4>4. Get Help</h4><p>Your contacts can reach you quickly.</p></div>',
+        unsafe_allow_html=True
+    )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ---------------- SAFETY TIPS ----------------
-st.markdown("<div class="safety-box">", unsafe_allow_html=True)
+st.markdown('<div class="safety-box">', unsafe_allow_html=True)
 st.markdown("### 🛡️ Safety Tips")
+
 tip1, tip2, tip3 = st.columns(3)
 
 with tip1:
