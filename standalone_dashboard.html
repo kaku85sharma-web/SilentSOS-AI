@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>SilentSOS AI – Help Without Saying Help</title>
+  <meta name="description" content="Hidden Emergency AI Assistant - Cyber-security, covert voice trigger detection, live location telemetry, and stealth distress dispatch.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+    :root {
+      --bg-dark: #050816; --bg-card: rgba(13, 20, 36, 0.75); --bg-card-hover: rgba(18, 28, 50, 0.88); --bg-card-solid: #0b1222;
+      --primary-red: #ff003c; --primary-red-glow: rgba(255, 0, 60, 0.45); --primary-red-light: rgba(255, 0, 60, 0.15); --primary-red-border: rgba(255, 0, 60, 0.3);
+      --cyan-accent: #00f0ff; --cyan-glow: rgba(0, 240, 255, 0.35); --green-safe: #00ff88; --green-glow: rgba(0, 255, 136, 0.35); --warning-yellow: #ffb700; --purple-critical: #d000ff;
+      --text-main: #ffffff; --text-muted: #8e9cb0; --text-dim: #4e5d78;
+      --border-radius: 20px; --border-radius-sm: 12px; --border-radius-pill: 50px;
+      --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; --font-mono: 'JetBrains Mono', monospace;
+      --active-glow-color: var(--primary-red-glow); --active-border-color: var(--primary-red-border);
+    }
+
+    body.light-theme {
+      --bg-dark: #f0f4f9; --bg-card: rgba(255, 255, 255, 0.85); --bg-card-hover: rgba(255, 255, 255, 0.98); --bg-card-solid: #ffffff;
+      --primary-red: #e11d48; --primary-red-glow: rgba(225, 29, 72, 0.25); --primary-red-light: rgba(225, 29, 72, 0.1); --primary-red-border: rgba(225, 29, 72, 0.25);
+      --cyan-accent: #0284c7; --cyan-glow: rgba(2, 132, 199, 0.25); --green-safe: #059669; --warning-yellow: #d97706;
+      --text-main: #0f172a; --text-muted: #475569; --text-dim: #94a3b8;
+      background-color: var(--bg-dark);
+    }
+
+    body.light-theme .glass-card { box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9); }
+    body.light-theme .bg-glow-top { background: radial-gradient(circle, rgba(225, 29, 72, 0.12) 0%, rgba(240, 244, 249, 0) 70%); }
+    body.light-theme .header-title { background: linear-gradient(135deg, #0f172a 40%, #e11d48 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none; }
+    body.light-theme .cyber-input { background: rgba(255, 255, 255, 0.9); border-color: rgba(15, 23, 42, 0.15); color: #0f172a; }
+    body.light-theme .live-transcript-box { background: rgba(255, 255, 255, 0.9); border-color: rgba(2, 132, 199, 0.3); color: #0284c7; }
+    body.light-theme .map-container { background: #e2e8f0; border-color: rgba(15, 23, 42, 0.15); }
+    body.light-theme .map-coords-bar, body.light-theme .hud-badge { background: rgba(255, 255, 255, 0.9); color: #0f172a; border-color: rgba(2, 132, 199, 0.3); }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; overflow-x: hidden; position: relative; line-height: 1.5; transition: background-color 0.5s ease, color 0.5s ease; }
+
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+    .bg-glow-top { position: fixed; top: -180px; left: 50%; transform: translateX(-50%); width: 850px; height: 500px; background: radial-gradient(circle, rgba(255, 0, 60, 0.22) 0%, rgba(5, 8, 22, 0) 70%); z-index: 0; pointer-events: none; }
+    .bg-glow-right { position: fixed; bottom: -120px; right: -120px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, rgba(5, 8, 22, 0) 70%); z-index: 0; pointer-events: none; }
+
+    .app-container { position: relative; z-index: 1; max-width: 1650px; margin: 0 auto; padding: 24px; display: flex; flex-direction: column; gap: 24px; min-height: 100vh; }
+    .glass-card { background: var(--bg-card); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--active-border-color); border-radius: var(--border-radius); padding: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.08); transition: var(--transition-normal); position: relative; overflow: hidden; }
+    .glass-card:hover { border-color: rgba(255, 0, 60, 0.45); box-shadow: 0 14px 40px rgba(255, 0, 60, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.12); }
+    .glass-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(255, 0, 60, 0.5), transparent); opacity: 0.7; }
+
+    body.threat-level-medium { --active-border-color: rgba(255, 183, 0, 0.35); }
+    body.threat-level-high { --active-border-color: rgba(255, 0, 60, 0.5); }
+    body.threat-level-critical { --active-border-color: rgba(208, 0, 255, 0.6); animation: bg-pulse-critical 1.5s infinite alternate; }
+    @keyframes bg-pulse-critical { 0% { background-color: #050816; } 100% { background-color: #12031c; } }
+
+    .app-header { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; position: relative; }
+    .header-top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .system-status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; background: rgba(0, 255, 136, 0.08); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: var(--border-radius-pill); font-family: var(--font-mono); font-size: 0.75rem; color: var(--green-safe); letter-spacing: 1px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--green-safe); box-shadow: 0 0 10px var(--green-safe); animation: blink 1.8s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+
+    .brand-logo-shield { width: 80px; height: 80px; background: radial-gradient(circle, rgba(255, 0, 60, 0.3) 0%, rgba(13, 20, 36, 0.9) 70%); border: 2px solid var(--primary-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 35px var(--primary-red-glow); margin-bottom: 8px; }
+    .brand-logo-shield svg { width: 40px; height: 40px; fill: none; stroke: var(--text-main); stroke-width: 2; filter: drop-shadow(0 0 8px var(--primary-red)); }
+    .header-title { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #ffffff 40%, #ff003c 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255, 0, 60, 0.3); }
+    .header-subtitle { font-size: 1rem; color: var(--text-muted); font-weight: 400; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 4px; }
+
+    .parent-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 10px; }
+    .parent-card { background: linear-gradient(135deg, rgba(255, 0, 60, 0.08) 0%, rgba(13, 20, 36, 0.8) 100%); border: 1px solid rgba(255, 0, 60, 0.3); border-radius: var(--border-radius-sm); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .parent-card-header { display: flex; align-items: center; gap: 12px; }
+    .parent-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 0, 60, 0.2); border: 1px solid var(--primary-red-border); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+    .parent-relation { font-size: 0.72rem; font-family: var(--font-mono); color: var(--cyan-accent); text-transform: uppercase; }
+    .parent-name { font-size: 1rem; font-weight: 700; color: var(--text-main); }
+    .parent-phone { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
+    .parent-actions-row { display: flex; gap: 8px; }
+
+    .btn-danger-sm { flex: 1; background: linear-gradient(135deg, #ff003c 0%, #a30026 100%); border: 1px solid #ff003c; color: white; padding: 6px 10px; border-radius: var(--border-radius-sm); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+    .btn-secondary-sm { flex: 1; background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); color: var(--cyan-accent); padding: 6px 10px; border-radius: var(--border-radius-sm); font-size: 0.78rem; cursor: pointer; }
+
+    #leaflet-map-div { width: 100%; height: 100%; border-radius: var(--border-radius-sm); z-index: 1; }
+    .leaflet-red-pulse-marker { position: relative; }
+    .leaflet-marker-pin { width: 16px; height: 16px; background: #ff003c; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 15px #ff003c; }
+    .leaflet-marker-pulse { position: absolute; top: -8px; left: -8px; width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ff003c; animation: leaflet-pulse-anim 1.8s infinite; }
+    @keyframes leaflet-pulse-anim { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+
+    .covert-toggle-btn { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.15); color: var(--text-muted); padding: 8px 18px; border-radius: var(--border-radius-pill); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 350px; gap: 24px; }
+    @media (max-width: 1250px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    .main-content-column { display: flex; flex-direction: column; gap: 24px; }
+
+    .section-title { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text-main); margin-bottom: 18px; }
+    .section-title svg { width: 20px; height: 20px; stroke: var(--primary-red); }
+    .title-badge { font-family: var(--font-mono); font-size: 0.7rem; padding: 2px 8px; background: var(--primary-red-light); border: 1px solid var(--primary-red-border); color: var(--primary-red); border-radius: 4px; font-weight: 500; }
+
+    .voice-trigger-card { display: flex; flex-direction: column; align-items: center; padding: 36px 24px; text-align: center; }
+    .mic-container { position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; margin: 16px 0 24px 0; }
+    .pulse-ring { position: absolute; border-radius: 50%; border: 2px solid var(--primary-red); opacity: 0; animation: pulse-ring-anim 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+    .pulse-ring:nth-child(1) { width: 100%; height: 100%; animation-delay: 0s; }
+    .pulse-ring:nth-child(2) { width: 135%; height: 135%; animation-delay: 0.8s; }
+    .pulse-ring:nth-child(3) { width: 170%; height: 170%; animation-delay: 1.6s; }
+    @keyframes pulse-ring-anim { 0% { transform: scale(0.6); opacity: 0.8; } 50% { opacity: 0.4; } 100% { transform: scale(1.35); opacity: 0; } }
+
+    .mic-button { width: 92px; height: 92px; border-radius: 50%; background: radial-gradient(circle, #ff003c 0%, #a30026 100%); border: none; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 35px var(--primary-red-glow); z-index: 2; }
+    .mic-button.recording { background: radial-gradient(circle, #00ff88 0%, #009951 100%); box-shadow: 0 0 35px var(--green-glow); }
+    .mic-button svg { width: 42px; height: 42px; fill: currentColor; }
+
+    .db-meter-wrapper { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 480px; margin: 6px 0 12px 0; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+    .db-meter-track { flex: 1; height: 6px; background: rgba(0, 0, 0, 0.15); border-radius: 3px; overflow: hidden; }
+    .db-meter-fill { height: 100%; width: 35%; background: linear-gradient(90deg, var(--cyan-accent) 0%, var(--green-safe) 60%, var(--primary-red) 100%); }
+
+    .waveform-canvas { width: 100%; max-width: 520px; height: 65px; margin: 8px 0 16px 0; }
+    .live-transcript-box { font-family: var(--font-mono); font-size: 0.85rem; color: var(--cyan-accent); padding: 10px 18px; border-radius: var(--border-radius-sm); max-width: 480px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .trigger-actions-row { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+    .btn-secondary { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.15); color: var(--text-main); padding: 8px 18px; border-radius: var(--border-radius-sm); font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-danger { background: linear-gradient(135deg, #ff003c 0%, #b3002a 100%); border: 1px solid #ff003c; color: white; padding: 8px 18px; border-radius: var(--border-radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px var(--primary-red-glow); }
+
+    .two-col-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 950px) { .two-col-row { grid-template-columns: 1fr; } }
+
+    .phrase-input-group { display: flex; gap: 10px; margin-bottom: 16px; }
+    .cyber-input { flex: 1; border-radius: var(--border-radius-sm); padding: 10px 14px; font-size: 0.9rem; outline: none; }
+    .phrase-tags-list { display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto; padding-right: 4px; }
+    .phrase-item { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.08); padding: 10px 14px; border-radius: var(--border-radius-sm); }
+    .phrase-val { font-weight: 500; font-size: 0.9rem; color: var(--text-main); }
+    .phrase-category { font-size: 0.75rem; color: var(--text-muted); }
+
+    .contacts-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .contacts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .contact-card { background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.08); border-radius: var(--border-radius-sm); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .contact-card-top { display: flex; align-items: center; gap: 10px; }
+    .contact-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 0, 60, 0.4) 0%, rgba(0, 240, 255, 0.4) 100%); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: white; border: 1px solid rgba(255, 255, 255, 0.2); }
+
+    .map-container { width: 100%; height: 230px; border-radius: var(--border-radius-sm); overflow: hidden; position: relative; }
+    .map-controls-overlay { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; z-index: 5; }
+    .map-btn { background: rgba(5, 8, 22, 0.85); border: 1px solid rgba(255, 255, 255, 0.2); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
+
+    .actions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    @media (max-width: 900px) { .actions-grid { grid-template-columns: repeat(2, 1fr); } }
+    .action-tile { background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: var(--border-radius-sm); padding: 18px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: var(--transition-normal); text-align: center; }
+
+    .timeline-container { display: flex; flex-direction: column; gap: 12px; max-height: 260px; overflow-y: auto; padding-right: 6px; }
+    .timeline-item { display: flex; gap: 14px; align-items: flex-start; padding-bottom: 12px; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+
+    .sidebar-column { display: flex; flex-direction: column; gap: 24px; }
+    .threat-meter-box { display: flex; flex-direction: column; align-items: center; padding: 20px 16px; }
+    .threat-level-badge { font-size: 1.8rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--green-safe); }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; backdrop-filter: blur(20px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: var(--transition-normal); }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+    body.covert-mode { background: #1a1a1a !important; }
+    body.covert-mode .app-container { display: none !important; }
+    .covert-calculator-screen { display: none; }
+    body.covert-mode .covert-calculator-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; color: #fff; font-family: Arial, sans-serif; }
+    .calc-box { width: 330px; background: #2b2b2b; border-radius: 16px; padding: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); border: 1px solid #444; }
+    .calc-display { background: #111; color: #00ff88; font-family: var(--font-mono); font-size: 2.2rem; text-align: right; padding: 16px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; }
+    .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .calc-btn { background: #3d3d3d; border: none; color: white; font-size: 1.3rem; padding: 16px; border-radius: 10px; cursor: pointer; }
+    .calc-btn.op { background: #ff9500; }
+  </style>
+</head>
+<body class="threat-level-low">
+
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-glow-top"></div>
+  <div class="bg-glow-right"></div>
+
+  <div class="covert-calculator-screen">
+    <div class="calc-box">
+      <div class="calc-display" id="calc-disp">0</div>
+      <div class="calc-grid">
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('C')">C</button>
+        <button class="calc-btn" onclick="SilentApp.toggleCovertMode()">+/-</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('%')">%</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('÷')">÷</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('7')">7</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('8')">8</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('9')">9</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('×')">×</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('4')">4</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('5')">5</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('6')">6</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('-')">-</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('1')">1</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('2')">2</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('3')">3</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('+')">+</button>
+        <button class="calc-btn" style="grid-column: span 2;" onclick="SilentApp.calcKeyPress('0')">0</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('.')">.</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('=')">=</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-container">
+
+    <header class="app-header glass-card">
+      <div class="header-top-bar">
+        <div class="system-status-pill">
+          <div class="status-dot"></div>
+          <span>SYSTEM ARMED • REAL SPEECH & GPS ACTIVE</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="covert-toggle-btn" id="theme-toggle-btn" onclick="SilentApp.toggleTheme()">☀️ Light Mode</button>
+          <button class="covert-toggle-btn" style="border-color: #ff003c; color: white;" onclick="ParentPortal.openParentVaultModal()">👨‍👩‍👧 Parent Vault</button>
+          <button class="covert-toggle-btn" onclick="SilentSecurity.openVaultModal()">🔒 Key Vault</button>
+          <button class="covert-toggle-btn" onclick="SilentApp.toggleCovertMode()">Covert Mode</button>
+        </div>
+      </div>
+      <div class="logo-wrapper">
+        <div class="brand-logo-shield">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4m0 4h.01" stroke-width="3" stroke-linecap="round"></path></svg>
+        </div>
+      </div>
+      <h1 class="header-title">SilentSOS AI</h1>
+      <p class="header-subtitle">Hidden Emergency Assistant & Parent Tracking System</p>
+    </header>
+
+    <div class="dashboard-grid">
+      <div class="main-content-column">
+        <section class="glass-card" style="border-color: rgba(255, 0, 60, 0.4); background: linear-gradient(180deg, rgba(25, 8, 18, 0.85) 0%, rgba(13, 20, 36, 0.85) 100%);">
+          <div class="contacts-header">
+            <div class="section-title" style="margin-bottom:0;"><span style="color: #ffffff;">Parent & Guardian Emergency Dispatch</span></div>
+            <button class="btn-danger-sm" style="padding: 6px 14px;" onclick="ParentPortal.addParentPrompt()">+ Add Parent</button>
+          </div>
+          <div class="parent-card-grid" id="parent-contacts-container"></div>
+        </section>
+
+        <section class="glass-card voice-trigger-card">
+          <div class="section-title" style="margin-bottom:0;"><span>Voice Trigger Panel (Real Web Speech AI)</span></div>
+          <div class="mic-container">
+            <div class="pulse-ring"></div><div class="pulse-ring"></div><div class="pulse-ring"></div>
+            <button class="mic-button recording" id="mic-button" onclick="SilentAudio.toggleListening()"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path></svg></button>
+          </div>
+          <div class="listening-text" id="listening-status-text">Listening for safe phrase...</div>
+          <div class="db-meter-wrapper"><span>NOISE FLOOR:</span><div class="db-meter-track"><div class="db-meter-fill" id="db-meter-fill"></div></div><span id="db-meter-val">38 dB</span></div>
+          <canvas id="waveform-canvas" class="waveform-canvas"></canvas>
+          <div class="live-transcript-box" id="live-transcript-box">🎙️ Web Speech API Active. Say any secret phrase...</div>
+          <div class="trigger-actions-row">
+            <button class="btn-secondary" onclick="SilentAudio.toggleListening()">Pause / Resume Mic</button>
+            <button class="btn-secondary" onclick="SilentAudio.toggleRealMic()">🎙️ Hardware Mic FFT</button>
+            <button class="btn-danger" onclick="SilentApp.triggerSOSAlert(true)">Simulate Trigger Alert</button>
+          </div>
+        </section>
+
+        <div class="two-col-row">
+          <section class="glass-card">
+            <div class="section-title"><span>Safe Phrase Setup</span></div>
+            <div class="phrase-input-group">
+              <input type="text" id="new-phrase-input" class="cyber-input" placeholder="e.g., 'Ordering pizza'..." onkeydown="if(event.key==='Enter') SilentApp.addPhrase()">
+              <button class="btn-danger" onclick="SilentApp.addPhrase()">+ Add</button>
+            </div>
+            <div class="phrase-tags-list" id="phrase-tags-list"></div>
+          </section>
+
+          <section class="glass-card">
+            <div class="contacts-header">
+              <div class="section-title" style="margin-bottom:0;"><span>Emergency Contacts</span></div>
+              <div style="display:flex; gap: 6px;">
+                <button class="btn-secondary" style="padding: 4px 8px;" onclick="SilentApp.togglePhoneMasking()">👁️ Mask</button>
+                <button class="btn-secondary" style="padding: 4px 10px;" onclick="SilentApp.addContactPrompt()">+ Add</button>
+              </div>
+            </div>
+            <div class="contacts-grid" id="contacts-grid"></div>
+          </section>
+        </div>
+
+        <div class="two-col-row">
+          <section class="glass-card location-card">
+            <div class="section-title"><span>Live GPS Location</span></div>
+            <div class="map-container">
+              <div id="leaflet-map-div"></div>
+              <canvas id="map-canvas" style="display:none;"></canvas>
+              <div class="map-controls-overlay">
+                <button class="map-btn" onclick="SilentMap.zoomIn()">+</button>
+                <button class="map-btn" onclick="SilentMap.zoomOut()">-</button>
+                <button class="map-btn" onclick="SilentMap.toggleMode()">🗺️ Mode</button>
+              </div>
+              <div class="map-overlay-hud"><div class="hud-badge"><div class="status-dot"></div><span id="gps-status-badge">GPS LOCKED ±3m</span></div></div>
+              <div class="map-coords-bar"><span>COORDS: <strong id="map-coords-text" style="color: #00f0ff;">37.7749° N, 122.4194° W</strong></span></div>
+            </div>
+          </section>
+
+          <section class="glass-card">
+            <div class="section-title"><span>Emergency Actions</span></div>
+            <div class="actions-grid">
+              <div class="action-tile" onclick="SilentApp.triggerSOSAlert(true)"><span class="action-label">Send SOS</span></div>
+              <div class="action-tile" onclick="SilentApp.shareLiveLocation()"><span class="action-label">Share Location</span></div>
+              <div class="action-tile" onclick="SilentApp.toggleHiddenRecording()"><span class="action-label" id="action-rec-label">Start Hidden Rec</span></div>
+              <div class="action-tile" onclick="ParentPortal.triggerParentCall('+15559876543', 'Parents')"><span class="action-label">Call Parents</span></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="glass-card">
+          <div class="timeline-header-bar">
+            <div class="section-title" style="margin-bottom:0;"><span>Activity Timeline</span></div>
+          </div>
+          <div class="timeline-container" id="timeline-container"></div>
+        </section>
+      </div>
+
+      <aside class="sidebar-column">
+        <section class="glass-card threat-meter-box">
+          <div class="section-title" style="margin-bottom:4px;"><span>AI Threat Level</span></div>
+          <div class="threat-gauge-display"><div class="threat-level-badge low" id="threat-badge">LOW</div><div class="threat-bar-track"><div class="threat-bar-fill" id="threat-bar-fill"></div></div></div>
+          <div class="threat-selector-row">
+            <button class="threat-select-btn active low" id="threat-btn-low" onclick="SilentApp.setThreatLevel('low')">LOW</button>
+            <button class="threat-select-btn medium" id="threat-btn-medium" onclick="SilentApp.setThreatLevel('medium')">MED</button>
+            <button class="threat-select-btn high" id="threat-btn-high" onclick="SilentApp.setThreatLevel('high')">HIGH</button>
+            <button class="threat-select-btn critical" id="threat-btn-critical" onclick="SilentApp.setThreatLevel('critical')">CRIT</button>
+          </div>
+        </section>
+
+        <section class="glass-card" style="text-align: center;">
+          <div class="section-title" style="justify-content: center;"><span>Voice Stress Score</span></div>
+          <div class="stress-meter-wrapper">
+            <svg class="stress-circle-svg" viewBox="0 0 120 120"><circle class="stress-bg-circle" cx="60" cy="60" r="50"></circle><circle class="stress-value-circle" id="stress-value-circle" cx="60" cy="60" r="50"></circle></svg>
+            <div class="stress-score-text" id="stress-score-num">14%</div>
+          </div>
+        </section>
+
+        <section class="glass-card">
+          <div class="section-title"><span>Device Telemetry</span></div>
+          <div class="device-status-list">
+            <div class="status-row"><span class="status-row-label">Battery Level</span><span class="status-row-value" style="color: #00ff88;">88%</span></div>
+            <div class="status-row"><span class="status-row-label">Stealth Mode</span><span class="status-row-value" style="color: #00f0ff;">ACTIVE</span></div>
+          </div>
+        </section>
+      </aside>
+
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="sos-modal">
+    <div class="emergency-lockdown-modal">
+      <div style="font-size: 2.5rem; margin-bottom: 8px;">🚨</div>
+      <h2 style="font-size: 1.8rem; color: #ff003c;">EMERGENCY SOS ACTIVATED</h2>
+      <div class="countdown-number" id="sos-countdown">5</div>
+      <button class="btn-secondary" style="border-color: #ff003c; color: white;" onclick="SilentApp.cancelSOS()">CANCEL SOS</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="parent-vault-modal">
+    <div class="glass-card" style="width: 90%; max-width: 580px; border-color: #ff003c;">
+      <div class="section-title"><span style="color: #ff003c;">👨‍👩‍👧 Parent Telemetry Portal</span></div>
+      <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 10px; margin-bottom: 16px;">
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #00f0ff;">📍 LIVE TARGET GPS: <strong id="parent-modal-coords">37.7749° N, 122.4194° W</strong></div>
+        <div id="parent-portal-audio-sec" style="display:none; margin-top: 12px;">
+          <audio id="parent-portal-audio-player" controls style="width: 100%; height: 35px;"></audio>
+        </div>
+      </div>
+      <button class="btn-secondary" onclick="ParentPortal.closeParentVaultModal()">Close</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    window.SilentSecurity = (function() { return { saveKeys: function() {}, maskPhoneNumber: function(p) { return p ? p.replace(/(\+\d{1,2}\s?\(\d{3}\)\s?\d{3})-\d{4}/, "$1-****") : ""; }, openVaultModal: function() {}, closeVaultModal: function() {} }; })();
+    window.ParentPortal = (function() {
+      let parentContacts = [{ relation: "Mother", name: "Elena Jenkins", phone: "+1 (555) 987-6543", status: "Primary Guardian" }];
+      function render() { const c = document.getElementById('parent-contacts-container'); if (!c) return; c.innerHTML = parentContacts.map(p => `<div class="parent-card"><span class="parent-name">${p.name}</span><button class="btn-danger-sm" onclick="ParentPortal.triggerParentCall('${p.phone}', '${p.name}')">📞 Call Parent</button></div>`).join(''); }
+      return { init: render, triggerParentCall: function(p, n) { alert(`🚨 Calling Parent ${n} (${p})...`); }, openParentVaultModal: function() { document.getElementById('parent-vault-modal')?.classList.add('active'); }, closeParentVaultModal: function() { document.getElementById('parent-vault-modal')?.classList.remove('active'); }, addParentPrompt: function() {} };
+    })();
+    window.SilentSpeech = (function() { return { start: function() {} }; })();
+    window.SilentRecorder = (function() { return { start: function() {}, stop: function() {} }; })();
+    window.SilentAudio = (function() { return { init: function() {}, toggleListening: function() {} }; })();
+    window.SilentMap = (function() { return { init: function() {}, zoomIn: function() {}, zoomOut: function() {}, toggleMode: function() {} }; })();
+    window.SilentApp = (function() {
+      let isLight = localStorage.getItem("silentsos_theme") === "light";
+      function apply() {
+        const b = document.getElementById('theme-toggle-btn');
+        if (isLight) { document.body.classList.add('light-theme'); if (b) b.innerHTML = '<span>☀️ Light Mode</span>'; }
+        else { document.body.classList.remove('light-theme'); if (b) b.innerHTML = '<span>🌙 Dark Mode</span>'; }
+      }
+      function toggleTheme() { isLight = !isLight; localStorage.setItem("silentsos_theme", isLight ? "light" : "dark"); apply(); }
+      function init() { apply(); }
+      return { init: init, toggleTheme: toggleTheme, getSafePhrases: function() { return []; }, addPhrase: function() {}, testPhraseTrigger: function() {}, togglePhoneMasking: function() {}, triggerSOSAlert: function() {}, cancelSOS: function() {}, setThreatLevel: function(l) { document.body.className = `${isLight ? 'light-theme ' : ''}threat-level-${l}`; }, calcKeyPress: function() {}, toggleCovertMode: function() { document.body.classList.toggle('covert-mode'); }, addTimelineEvent: function() {} };
+    })();
+    document.addEventListener('DOMContentLoaded', function() { window.ParentPortal.init(); window.SilentApp.init(); });
+  </script>
+</body>
+</html>

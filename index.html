@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>SilentSOS AI – Help Without Saying Help</title>
+  <meta name="description" content="Hidden Emergency AI Assistant - Cyber-security, covert voice trigger detection, live location telemetry, and stealth distress dispatch.">
+  
+  <!-- Leaflet Dark Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+</head>
+<body class="threat-level-low">
+
+  <!-- Background Particle Network Canvas & Radial Glow Accents -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-glow-top"></div>
+  <div class="bg-glow-right"></div>
+
+  <!-- Covert Calculator Screen (Disguise Mode with Secret 911 Passcode) -->
+  <div class="covert-calculator-screen">
+    <div class="calc-box">
+      <div class="calc-display" id="calc-disp">0</div>
+      <div class="calc-grid">
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('C')">C</button>
+        <button class="calc-btn" onclick="SilentApp.toggleCovertMode()" title="Exit Stealth">+/-</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('%')">%</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('÷')">÷</button>
+        
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('7')">7</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('8')">8</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('9')">9</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('×')">×</button>
+        
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('4')">4</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('5')">5</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('6')">6</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('-')">-</button>
+        
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('1')">1</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('2')">2</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('3')">3</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('+')">+</button>
+        
+        <button class="calc-btn" style="grid-column: span 2;" onclick="SilentApp.calcKeyPress('0')">0</button>
+        <button class="calc-btn" onclick="SilentApp.calcKeyPress('.')">.</button>
+        <button class="calc-btn op" onclick="SilentApp.calcKeyPress('=')" title="Enter 911= to return to SilentSOS AI">=</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Container -->
+  <div class="app-container">
+
+    <!-- Top Header -->
+    <header class="app-header glass-card">
+      <div class="header-top-bar">
+        <div class="system-status-pill" id="system-status-pill">
+          <div class="status-dot" id="status-dot"></div>
+          <span>SYSTEM ARMED • SPEECH, GPS & SCREAM DETECTOR ACTIVE</span>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button class="covert-toggle-btn" id="theme-toggle-btn" onclick="SilentApp.toggleTheme()" title="Toggle Light / Dark Mode">
+            <span>☀️ Light Mode</span>
+          </button>
+
+          <button class="covert-toggle-btn" style="border-color: #ff003c; color: white;" onclick="ParentPortal.openParentVaultModal()" title="Parent Guardian Telemetry Vault">
+            <span>👨‍👩‍👧 Parent Vault</span>
+          </button>
+
+          <button class="covert-toggle-btn" onclick="SilentSecurity.openVaultModal()" title="API Key Vault & Security Credentials">
+            <span>🔒 Key Vault</span>
+          </button>
+
+          <button class="covert-toggle-btn" onclick="SilentApp.toggleCovertMode()" title="Toggle Disguise Screen">
+            <span>Covert Mode</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="logo-wrapper">
+        <div class="brand-logo-shield">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M12 8v4m0 4h.01" stroke-width="3" stroke-linecap="round"></path>
+          </svg>
+        </div>
+      </div>
+
+      <h1 class="header-title">SilentSOS AI</h1>
+      <p class="header-subtitle">Hidden Emergency Assistant & Parent Tracking System</p>
+    </header>
+
+    <!-- Main Dashboard Content Grid -->
+    <div class="dashboard-grid">
+
+      <!-- Left Column: Main Controls -->
+      <div class="main-content-column">
+
+        <!-- PARENT EMERGENCY & GUARDIAN TRACKING HUB -->
+        <section class="glass-card" style="border-color: rgba(255, 0, 60, 0.4); background: linear-gradient(180deg, rgba(25, 8, 18, 0.85) 0%, rgba(13, 20, 36, 0.85) 100%);">
+          <div class="contacts-header">
+            <div class="section-title" style="margin-bottom:0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ff003c" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
+              <span>Parent & Guardian Emergency Dispatch</span>
+              <span class="title-badge" style="background: rgba(255, 0, 60, 0.2); color: #ff003c;">PRIORITY DISPATCH</span>
+            </div>
+            <button class="btn-danger-sm" style="padding: 6px 14px;" onclick="ParentPortal.addParentPrompt()">+ Add Parent Phone</button>
+          </div>
+
+          <div class="parent-card-grid" id="parent-contacts-container">
+            <!-- Dynamically populated Parent Cards -->
+          </div>
+        </section>
+
+        <!-- Voice & Scream Trigger Panel -->
+        <section class="glass-card voice-trigger-card">
+          <div class="section-title" style="margin-bottom:0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+            <span>Voice & Scream Panic Panel (AI Decibel Monitor)</span>
+            <span class="title-badge">ALWAYS LISTENING</span>
+          </div>
+
+          <div class="mic-container">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <button class="mic-button recording" id="mic-button" onclick="SilentAudio.toggleListening()" title="Toggle Microphone State">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line>
+                <line x1="8" y1="23" x2="16" y2="23" stroke="currentColor" stroke-width="2"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="listening-text" id="listening-status-text">Listening for safe phrase & panic scream spikes (>75dB)...</div>
+
+          <div class="db-meter-wrapper">
+            <span>NOISE FLOOR:</span>
+            <div class="db-meter-track">
+              <div class="db-meter-fill" id="db-meter-fill"></div>
+            </div>
+            <span id="db-meter-val" style="color: #00f0ff; width: 45px; text-align: right;">38 dB</span>
+          </div>
+
+          <canvas id="waveform-canvas" class="waveform-canvas"></canvas>
+
+          <div class="live-transcript-box" id="live-transcript-box">
+            🎙️ Web Speech API & Scream Detector Active. Say secret phrase or scream...
+          </div>
+
+          <div class="trigger-actions-row">
+            <button class="btn-secondary" onclick="SilentAudio.toggleListening()">
+              <span>Pause / Resume Mic</span>
+            </button>
+            <button class="btn-secondary" onclick="SilentAudio.toggleRealMic()" title="Attach real microphone hardware analyzer">
+              <span>🎙️ Hardware Mic FFT</span>
+            </button>
+            <button class="btn-secondary" style="border-color: #ffb700; color: #ffb700;" onclick="SilentAudio.simulateScreamPanicSpike()">
+              <span>😱 Test Scream (>75dB)</span>
+            </button>
+            <button class="btn-danger" onclick="SilentApp.triggerSOSAlert(true)">
+              <span>Simulate SOS Alert</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Two Column Row: Safe Phrase & Emergency Contacts -->
+        <div class="two-col-row">
+
+          <section class="glass-card">
+            <div class="section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>Safe Phrase Setup</span>
+            </div>
+
+            <div class="phrase-input-group">
+              <input type="text" id="new-phrase-input" class="cyber-input" placeholder="e.g., 'Ordering pizza with extra pepperoni'..." onkeydown="if(event.key==='Enter') SilentApp.addPhrase()">
+              <button class="btn-danger" onclick="SilentApp.addPhrase()">+ Add</button>
+            </div>
+
+            <div class="phrase-tags-list" id="phrase-tags-list"></div>
+          </section>
+
+          <section class="glass-card">
+            <div class="contacts-header">
+              <div class="section-title" style="margin-bottom:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                </svg>
+                <span>Emergency Contacts</span>
+              </div>
+              <div style="display:flex; gap: 6px;">
+                <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.7rem;" onclick="SilentApp.togglePhoneMasking()">👁️ Mask</button>
+                <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;" onclick="SilentApp.addContactPrompt()">+ Add</button>
+              </div>
+            </div>
+
+            <div class="contacts-grid" id="contacts-grid"></div>
+          </section>
+
+        </div>
+
+        <!-- 4. Real Live Location Preview (Leaflet.js Dark Map + Real GPS) -->
+        <div class="two-col-row">
+
+          <section class="glass-card location-card">
+            <div class="section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>Live GPS Location (Real Browser Geolocation)</span>
+            </div>
+
+            <div class="map-container">
+              <!-- Leaflet Real GPS Map Div -->
+              <div id="leaflet-map-div"></div>
+              <canvas id="map-canvas" style="display:none;"></canvas>
+
+              <div class="map-controls-overlay">
+                <button class="map-btn" onclick="SilentMap.zoomIn()">+</button>
+                <button class="map-btn" onclick="SilentMap.zoomOut()">-</button>
+                <button class="map-btn" onclick="SilentMap.toggleMode()">🗺️ Mode</button>
+              </div>
+              
+              <div class="map-overlay-hud">
+                <div class="hud-badge">
+                  <div class="status-dot"></div>
+                  <span id="gps-status-badge">GPS LOCKED ±3m</span>
+                </div>
+                <div class="hud-badge">
+                  <span>12 SAT CONNECTED</span>
+                </div>
+              </div>
+
+              <div class="map-coords-bar">
+                <span>COORDS: <strong id="map-coords-text" style="color: #00f0ff;">37.7749° N, 122.4194° W</strong></span>
+                <span>ALT: 42m</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Emergency Actions -->
+          <section class="glass-card">
+            <div class="section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <span>Emergency Actions</span>
+            </div>
+
+            <div class="actions-grid">
+              <div class="action-tile" onclick="SilentApp.triggerSOSAlert(true)">
+                <div class="action-icon"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+                <span class="action-label">Send SOS</span>
+              </div>
+
+              <div class="action-tile" onclick="SilentApp.shareLiveLocation()">
+                <div class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div>
+                <span class="action-label">Share Location</span>
+              </div>
+
+              <div class="action-tile" onclick="SilentApp.toggleHiddenRecording()">
+                <div class="action-icon"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path></svg></div>
+                <span class="action-label" id="action-rec-label">Start Hidden Rec</span>
+              </div>
+
+              <div class="action-tile" onclick="ParentPortal.triggerParentCall('+15559876543', 'Parents')">
+                <div class="action-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></div>
+                <span class="action-label">Call Parents</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Activity Timeline -->
+        <section class="glass-card">
+          <div class="timeline-header-bar">
+            <div class="section-title" style="margin-bottom:0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Activity Timeline</span>
+            </div>
+            <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;" onclick="SilentApp.addTimelineEvent('Log Check', 'Manual timeline audit logged', 'info')">Audit Log</button>
+          </div>
+          <div class="timeline-container" id="timeline-container"></div>
+        </section>
+
+      </div>
+
+      <!-- Right Telemetry Sidebar -->
+      <aside class="sidebar-column">
+
+        <section class="glass-card threat-meter-box">
+          <div class="section-title" style="margin-bottom:4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>AI Threat Level</span>
+          </div>
+
+          <div class="threat-gauge-display">
+            <div class="threat-level-badge low" id="threat-badge">LOW</div>
+            <div class="threat-bar-track"><div class="threat-bar-fill" id="threat-bar-fill"></div></div>
+          </div>
+
+          <div class="threat-selector-row">
+            <button class="threat-select-btn active low" id="threat-btn-low" onclick="SilentApp.setThreatLevel('low')">LOW</button>
+            <button class="threat-select-btn medium" id="threat-btn-medium" onclick="SilentApp.setThreatLevel('medium')">MED</button>
+            <button class="threat-select-btn high" id="threat-btn-high" onclick="SilentApp.setThreatLevel('high')">HIGH</button>
+            <button class="threat-select-btn critical" id="threat-btn-critical" onclick="SilentApp.setThreatLevel('critical')">CRIT</button>
+          </div>
+        </section>
+
+        <section class="glass-card" style="text-align: center;">
+          <div class="section-title" style="justify-content: center; margin-bottom: 4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            <span>Voice Stress Score</span>
+          </div>
+
+          <div class="stress-meter-wrapper">
+            <svg class="stress-circle-svg" viewBox="0 0 120 120">
+              <circle class="stress-bg-circle" cx="60" cy="60" r="50"></circle>
+              <circle class="stress-value-circle" id="stress-value-circle" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div class="stress-score-text" id="stress-score-num">14%</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Acoustic Pitch Variance Normal</span>
+          </div>
+        </section>
+
+        <section class="glass-card">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <span>Device Telemetry</span>
+          </div>
+
+          <div class="device-status-list">
+            <div class="status-row"><span class="status-row-label">Last Trigger Time</span><span class="status-row-value" id="last-trigger-time">No active threat</span></div>
+            <div class="status-row"><span class="status-row-label">Battery Level</span><span class="status-row-value" style="color: #00ff88;">88% (Optimized)</span></div>
+            <div class="status-row"><span class="status-row-label">Stealth Mode</span><span class="status-row-value" style="color: #00f0ff;">ACTIVE</span></div>
+            <div class="status-row"><span class="status-row-label">Mic Privilege</span><span class="status-row-value">Granted (Background)</span></div>
+            <div class="status-row"><span class="status-row-label">Network Protocol</span><span class="status-row-value">TOR Relay Encrypted</span></div>
+          </div>
+        </section>
+
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- Emergency SOS Countdown Modal -->
+  <div class="modal-overlay" id="sos-modal">
+    <div class="emergency-lockdown-modal">
+      <div style="font-size: 2.5rem; margin-bottom: 8px;">🚨</div>
+      <h2 style="font-size: 1.8rem; color: #ff003c; text-shadow: 0 0 20px rgba(255, 0, 60, 0.6);">EMERGENCY SOS ACTIVATED</h2>
+      <p style="color: #8e9cb0; font-size: 0.95rem; margin-top: 6px;">Safe phrase or panic scream signal detected. Dispatched silently in:</p>
+      <div class="countdown-number" id="sos-countdown">5</div>
+
+      <div class="dispatch-steps-list">
+        <div class="dispatch-step-item active" id="dispatch-step-1">➔ Step 1: Capturing 10s audio snippet & GPS location...</div>
+        <div class="dispatch-step-item" id="dispatch-step-2">Step 2: Dialing automated call to Parents (Mother & Father)...</div>
+        <div class="dispatch-step-item" id="dispatch-step-3">Step 3: Pinging nearest emergency response hotline...</div>
+        <div class="dispatch-step-item" id="dispatch-step-4">Step 4: Live tracking link dispatched via Parent SMS</div>
+      </div>
+
+      <button class="btn-secondary" style="border-color: #ff003c; color: white; padding: 12px 28px; font-size: 1rem;" onclick="SilentApp.cancelSOS()">CANCEL SOS DISPATCH</button>
+    </div>
+  </div>
+
+  <!-- Parent Vault & Live Guardian Telemetry Modal -->
+  <div class="modal-overlay" id="parent-vault-modal">
+    <div class="glass-card" style="width: 90%; max-width: 580px; border-color: #ff003c;">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ff003c" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+        </svg>
+        <span style="color: #ff003c;">👨‍👩‍👧 Parent & Guardian Telemetry Portal</span>
+      </div>
+
+      <p style="font-size: 0.85rem; color: #8e9cb0; margin-bottom: 16px;">
+        Parents have direct priority voice line access and live GPS tracking telemetry for emergency response.
+      </p>
+
+      <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 10px; border: 1px solid rgba(255, 0, 60, 0.3); margin-bottom: 16px; text-align: left;">
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #00f0ff; margin-bottom: 6px;">
+          📍 LIVE TARGET GPS COORDS: <strong id="parent-modal-coords">37.7749° N, 122.4194° W</strong>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);">
+          SPEED: 0.0 km/h • BATTERY: 88% • SATELLITES: 12 LOCKED
+        </div>
+
+        <div id="parent-portal-audio-sec" style="display:none; margin-top: 12px;">
+          <div style="font-size: 0.75rem; color: #00ff88; margin-bottom: 4px;">🎙️ REAL RECORDED EMERGENCY AUDIO CLIP:</div>
+          <audio id="parent-portal-audio-player" controls style="width: 100%; height: 35px;"></audio>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; gap: 10px;">
+        <button class="btn-secondary" onclick="ParentPortal.closeParentVaultModal()">Close Portal</button>
+        <button class="btn-danger" onclick="ParentPortal.triggerParentCall('+15559876543', 'Parents'); ParentPortal.closeParentVaultModal();">🚨 CALL PARENTS NOW</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security Key Vault Modal -->
+  <div class="modal-overlay" id="security-vault-modal">
+    <div class="glass-card" style="width: 90%; max-width: 520px; border-color: #00f0ff;">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span style="color: #00f0ff;">🔒 API Key & Credentials Vault</span>
+      </div>
+      <p style="font-size: 0.82rem; color: #8e9cb0; margin-bottom: 16px;">Credentials encrypted locally in session memory.</p>
+      <div style="display: flex; flex-direction: column; gap: 12px; text-align: left; margin-bottom: 20px;">
+        <div>
+          <label style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">SILENTSOS_API_KEY</label>
+          <input type="password" id="vault-input-api" class="cyber-input" style="width: 100%; margin-top: 4px;" value="sk_live_silentsos_998877665544332211">
+        </div>
+        <div>
+          <label style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">TWILIO_ACCOUNT_SID</label>
+          <input type="password" id="vault-input-twilio" class="cyber-input" style="width: 100%; margin-top: 4px;" value="AC_889900112233445566778899">
+        </div>
+        <div>
+          <label style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">MAPBOX_ACCESS_TOKEN</label>
+          <input type="password" id="vault-input-mapbox" class="cyber-input" style="width: 100%; margin-top: 4px;" value="pk.eyJ1Ijoic2lsZW50c29zIiwic2VjcmV0IHRva2VuIn0">
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button class="btn-secondary" onclick="SilentSecurity.closeVaultModal()">Close</button>
+        <button class="btn-danger" style="background: linear-gradient(135deg, #00f0ff 0%, #0088cc 100%); border-color: #00f0ff;" onclick="SilentSecurity.saveKeys(document.getElementById('vault-input-api').value, document.getElementById('vault-input-twilio').value, document.getElementById('vault-input-mapbox').value); SilentSecurity.closeVaultModal();">Save Encrypted Vault</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet Dark Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Scripts -->
+  <script src="js/security.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/recorder.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/parent_portal.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
